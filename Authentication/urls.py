@@ -6,7 +6,7 @@ from .District.views import DistrictList, DistrictDetail
 from .Taluk.views import TaulkList, TaulkDetail
 from .Panchayat.views import PanchayatList, PanchayatDetail
 from .Employee.views import EmployeeList, EmployeeDetail
-from .User.views import UserProfileList, UserProfileDetail
+from .User.views import UserProfileList, UserProfileDetail,UserProfileFilterPostAPI,UserProfileRandomRetrieveAPI
 
 urlpatterns = [
     # ROLE 
@@ -33,4 +33,6 @@ urlpatterns = [
     # USER 
       path('user_detail/', UserProfileList.as_view(), name='user-list'),
       path('user_detail/<int:pk>/', UserProfileDetail.as_view(), name='user-detail'),
+      path('user_filter/', UserProfileFilterPostAPI.as_view(), name='user-filter-post-api'),
+      path('user_random/', UserProfileRandomRetrieveAPI.as_view(), name='user-random-post-api'),
 ]

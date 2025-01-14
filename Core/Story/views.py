@@ -1,8 +1,6 @@
 from rest_framework.views import APIView
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
-from django.db.models import Q
-from my_Estory.Common.utils import api_response, api_error_response,api_paginated_response
+from my_Estory.Common.utils import api_response, api_error_response,api_paginated_response,PaginationData
 from ..models import Story
 from ..serializer import StorySerializer
 from django.http import Http404
@@ -73,24 +71,9 @@ class StoryDetail(APIView):
         except Exception as e:
             return api_error_response([str(e)], status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class StoryPagination(PageNumberPagination):
-    # Default values
-    page_size = 10
-    max_page_size = 1000
-
-    def paginate_queryset(self, queryset, request, view=None):
-        try:
-            # Override to support `page` and `page_size` from request payload
-            self.page = int(request.data.get('page', 1))  # Ensure page is an integer
-            self.page_size = int(request.data.get('page_size', self.page_size))  # Ensure page_size is an integer
-            if self.page_size <= 0:
-                raise ValidationError("Page size must be greater than 0.")
-            return super().paginate_queryset(queryset, request, view)
-        except ValueError:
-            raise ValidationError("Page and page_size must be valid integers.")
 
 class StoryFilterPostAPI(APIView):
-    pagination_class = StoryPagination
+    pagination_class = PaginationData
 
     def post(self, request, *args, **kwargs):
         try:
@@ -116,7 +99,7 @@ class StoryFilterPostAPI(APIView):
             if header:
                 queryset = queryset.filter(header__icontains=header)
             # Paginate the results
-            paginator = StoryPagination()
+            paginator = PaginationData()
             paginator.page_size = page_size
             paginated_queryset = paginator.paginate_queryset(queryset, request)
             # Serialize the data
