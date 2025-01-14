@@ -107,7 +107,7 @@ class StoryFilterPostAPI(APIView):
             if not isinstance(page_size, int) or page_size <= 0:
                 return api_error_response("Invalid page size. Must be a positive integer", status.HTTP_400_BAD_REQUEST)
             # Base queryset
-            queryset = Story.objects.all()
+            queryset = ModelName.objects.all()
             # Apply filters if provided
             if category_id:
                 queryset = queryset.filter(Category=category_id)
@@ -120,7 +120,7 @@ class StoryFilterPostAPI(APIView):
             paginator.page_size = page_size
             paginated_queryset = paginator.paginate_queryset(queryset, request)
             # Serialize the data
-            serializer = StorySerializer(paginated_queryset, many=True)
+            serializer = SerializerName(paginated_queryset, many=True)
             # Return paginated response
             paginatorData = paginator.get_paginated_response(serializer.data).data
             return api_paginated_response(paginatorData, modelName,page,page_size)
