@@ -40,9 +40,9 @@ def api_paginated_response(data,model,pageNumber,page_size,status_code=status.HT
        return Response({
         "status": True,
         "status_code": status_code,
-        "message": model + "data provided successfully",
-        "count":len(data),
+        "message": f"{str(model)} data provided successfully",
+        "total_data":data.get('count', 0),
         "pageNumber":pageNumber,
         "page_size":page_size,
-        "data": data
+        "data": data.get('results', [])
     }, status=status_code)

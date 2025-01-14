@@ -122,7 +122,8 @@ class StoryFilterPostAPI(APIView):
             # Serialize the data
             serializer = StorySerializer(paginated_queryset, many=True)
             # Return paginated response
-            return api_paginated_response(serializer.data, modelName,page,page_size)
+            paginatorData = paginator.get_paginated_response(serializer.data).data
+            return api_paginated_response(paginatorData, modelName,page,page_size)
 
         except ValidationError as e:
              return api_error_response(str(e), status.HTTP_400_BAD_REQUEST)
