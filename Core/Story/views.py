@@ -1,10 +1,10 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
-from my_Estory.Common.utils import api_response, api_error_response
+from my_Estory.Common.utils import api_response, api_error_response,api_paginated_response,PaginationData
 from ..models import Story
 from ..serializer import StorySerializer
 from django.http import Http404
+from django.core.exceptions import ValidationError
 
 modelName = "Story"
 notFound = "Story not found"
@@ -70,3 +70,46 @@ class StoryDetail(APIView):
             return api_error_response([notFound], status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return api_error_response([str(e)], status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class StoryFilterPostAPI(APIView):
+    pagination_class = PaginationData
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Extract filters from request body
+            category_id = request.data.get('Category', None)
+            created_by_id = request.data.get('created_by', None)
+            header = request.data.get('header', None)
+            page = request.data.get('page', 1)  # Default page is 1
+            page_size = request.data.get('page_size', 10)  # Default page_size is 10
+            # Validate page and page_size
+            if not isinstance(page, int) or page <= 0:
+                return api_error_response("Invalid page number. Must be a positive integer", status.HTTP_400_BAD_REQUEST)
+
+            if not isinstance(page_size, int) or page_size <= 0:
+                return api_error_response("Invalid page size. Must be a positive integer", status.HTTP_400_BAD_REQUEST)
+            # Base queryset
+            queryset = ModelName.objects.all()
+            # Apply filters if provided
+            if category_id:
+                queryset = queryset.filter(Category=category_id)
+            if created_by_id:
+                queryset = queryset.filter(created_by=created_by_id)
+            if header:
+                queryset = queryset.filter(header__icontains=header)
+            # Paginate the results
+            paginator = PaginationData()
+            paginator.page_size = page_size
+            paginated_queryset = paginator.paginate_queryset(queryset, request)
+            # Serialize the data
+            serializer = SerializerName(paginated_queryset, many=True)
+            # Return paginated response
+            paginatorData = paginator.get_paginated_response(serializer.data).data
+            return api_paginated_response(paginatorData, modelName,page,page_size)
+
+        except ValidationError as e:
+             return api_error_response(str(e), status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # Handle unexpected errors
+            return api_error_response(str(e), status.HTTP_500_INTERNAL_SERVER_ERROR)

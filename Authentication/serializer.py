@@ -5,9 +5,10 @@ from .models import Role,Employee,State,District,Taluk,Panchayat,UserProfile,Rou
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = '__all__'
+        fields = ['id', 'name', 'routes']
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    role = RoleSerializer()
     class Meta:
         model = Employee
         fields = '__all__'
@@ -33,6 +34,7 @@ class PanchayatSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    role = RoleSerializer()
     class Meta:
         model = UserProfile
         fields = '__all__'

@@ -3,6 +3,7 @@ import uuid
 
 class Role(models.Model):
     name = models.CharField(max_length=255)
+    routes = models.JSONField(default=list)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
