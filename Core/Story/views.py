@@ -113,3 +113,17 @@ class StoryFilterPostAPI(APIView):
         except Exception as e:
             # Handle unexpected errors
             return api_error_response(str(e), status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GetStoriesByIds(APIView):
+    def post(self, request):
+        # Extract IDs from the request payload
+        ids = request.data.get('id', [])
+        
+        if not ids or not isinstance(ids, list):
+            return api_error_response({'Null Error'}, status.HTTP_400_BAD_REQUEST,'No Recent Stories')
+        
+        # Fetch stories by IDs
+        stories = Story.objects.filter(id__in=ids)
+        serializer = StorySerializer(stories, many=True)
+        return api_response(serializer.data, modelName, 'get')

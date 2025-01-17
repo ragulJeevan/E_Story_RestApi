@@ -66,6 +66,7 @@ class Panchayat(models.Model):
 
 class UserProfile(models.Model):
     name = models.CharField(max_length=255)
+    recent_stories = models.JSONField(default=list)
     user_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     number = models.CharField(max_length=15, unique=True)
     whatsapp_number = models.CharField(max_length=15, blank=True, null=True)

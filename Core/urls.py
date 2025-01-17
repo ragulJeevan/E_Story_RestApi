@@ -1,6 +1,6 @@
 from django.urls import path
 from .Category.views import CategoryList,CategoryDetail
-from .Story.views import StoryList,StoryDetail,StoryFilterPostAPI
+from .Story.views import StoryList,StoryDetail,StoryFilterPostAPI,GetStoriesByIds
 
 urlpatterns = [
     # CATEGORY 
@@ -9,5 +9,6 @@ urlpatterns = [
     # STORY     
       path('story_detail/', StoryList.as_view(), name='story-list'),
       path('story_detail/<int:pk>/', StoryDetail.as_view(), name='story-detail'),   
-      path('story_filter/', StoryFilterPostAPI.as_view(), name='story-filter-post-api')
+      path('story_filter/', StoryFilterPostAPI.as_view(), name='story-filter-post-api'),
+      path('stories-by-ids/', GetStoriesByIds.as_view(), name='stories-by-ids')
 ]

@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.core.exceptions import ValidationError
 
 # RESPONSE SUCCESS 
-def api_response(data,model, operation, status_code=status.HTTP_200_OK):
+def api_response(data,model, operation, status_code=status.HTTP_200_OK,unique_message=''):
     
     if operation == 'get':
         message = model + " provided successfully"
@@ -22,27 +22,27 @@ def api_response(data,model, operation, status_code=status.HTTP_200_OK):
     return Response({
         "status": True,
         "status_code": status_code,
-        "message": message,
+        "message": unique_message if unique_message else message,
         "data": data
     }, status=status_code)
 
 
 # ERROR RESPONSE 
-def api_error_response(data,status_code=status.HTTP_400_BAD_REQUEST):
+def api_error_response(data,status_code=status.HTTP_400_BAD_REQUEST,unique_message=''):
     
     return Response({
         "status": False,
         "status_code": status_code,
-        "message": 'Something went wrong. Try again later !!!',
+        "message": unique_message if unique_message else 'Something went wrong. Try again later !!!',
         "error": data
     }, status=status_code)
 
 # PAGINATED RESPONSE 
-def api_paginated_response(data,model,pageNumber,page_size,status_code=status.HTTP_200_OK):
+def api_paginated_response(data,model,pageNumber,page_size,status_code=status.HTTP_200_OK,unique_message=''):
        return Response({
         "status": True,
         "status_code": status_code,
-        "message": f"{str(model)} data provided successfully",
+        "message": unique_message if unique_message else f"{str(model)} data provided successfully",
         "total_data":data.get('count', 0),
         "pageNumber":pageNumber,
         "page_size":page_size,
