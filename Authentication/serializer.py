@@ -8,10 +8,18 @@ class RoleSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'routes']
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    role = RoleSerializer()
+    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role as ID for POST and PUT
+    
     class Meta:
         model = Employee
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """ Override this method to customize the way the data is returned. """
+        representation = super().to_representation(instance)
+        # Use RoleSerializer to return nested role data on GET
+        representation['role'] = RoleSerializer(instance.role).data
+        return representation
 
 class StateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,11 +41,26 @@ class PanchayatSerializer(serializers.ModelSerializer):
         model = Panchayat
         fields = '__all__'
 
+# class UserProfileSerializer(serializers.ModelSerializer):
+#     role = RoleSerializer()
+#     class Meta:
+#         model = UserProfile
+#         fields = '__all__'
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
-    role = RoleSerializer()
+    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role as ID for POST and PUT
+    
     class Meta:
         model = UserProfile
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """ Override this method to customize the way the data is returned. """
+        representation = super().to_representation(instance)
+        # Use RoleSerializer to return nested role data on GET
+        representation['role'] = RoleSerializer(instance.role).data
+        return representation
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:

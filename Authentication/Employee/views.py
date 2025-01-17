@@ -70,3 +70,5 @@ class EmployeeDetail(APIView):
             return api_error_response([notFound], status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return api_error_response([str(e)], status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
