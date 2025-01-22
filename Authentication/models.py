@@ -4,6 +4,9 @@ import uuid
 class Role(models.Model):
     name = models.CharField(max_length=255)
     routes = models.JSONField(default=list)
+    permissions = models.JSONField(default=list)
+    is_publisher = models.BooleanField(default=False)
+    is_reviewer = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
