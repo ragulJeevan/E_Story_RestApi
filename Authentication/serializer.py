@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Role,Employee,State,District,Taluk,Panchayat,UserProfile,Route
+from .models import Role,Employee,State,District,Taluk,Panchayat,UserProfile,Route,Agreement
 
 # ROLE SERIALIZER 
 class RoleSerializer(serializers.ModelSerializer):
@@ -32,9 +32,10 @@ class StateSerializer(serializers.ModelSerializer):
 
 # DISTRICT SERIALIZER
 class DistrictSerializer(serializers.ModelSerializer):
+    state = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = District
-        fields = ['name', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'state', 'created_at', 'updated_at']
 
 
 # BULK SERIALIZER
@@ -61,9 +62,10 @@ class BulkDistrictCreateSerializer(serializers.Serializer):
 
 # TALUK SERIALIZER
 class TalukSerializer(serializers.ModelSerializer):
+    district = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Taluk
-        fields = ['name', 'created_at', 'updated_at']
+        fields = ['id','name','district', 'created_at', 'updated_at']
 
 
 #  BULK TALUK SERIALIZER       
@@ -89,9 +91,10 @@ class BulkTalukCreateSerializer(serializers.Serializer):
 
 # PANCHAYAT SERIALIZER
 class PanchayatSerializer(serializers.ModelSerializer):
+    taluk = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Panchayat
-        fields = ['name', 'created_at', 'updated_at']
+        fields = ['id','name','taluk', 'created_at', 'updated_at']
 
 # BULK PANCHAYAT SERIALIZER        
 class BulkPanchayatCreateSerializer(serializers.Serializer):
@@ -133,4 +136,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
+        fields = '__all__'
+
+class AgreementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agreement
         fields = '__all__'

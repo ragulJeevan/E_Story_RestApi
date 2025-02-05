@@ -91,7 +91,7 @@ class UserProfile(models.Model):
         return self.name
     
 class Route(models.Model):
-    route_name = models.CharField(max_length=255)
+    route_name = models.CharField(max_length=255,blank=True, null=True,default='')
     route_image = models.CharField(max_length=255, blank=True, null=True)  # Store the image URL as a string
     route_url = models.CharField(max_length=255)  # URL field for the route's web link
     is_main = models.BooleanField(default=False)
@@ -102,3 +102,10 @@ class Route(models.Model):
 
     def __str__(self):
         return self.route_name
+
+class Agreement(models.Model):
+    name = models.CharField(max_length=255, default="Default Agreement Name")
+    created_by = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='agreement_created')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_by = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='agreement_updated')
+    updated_at = models.DateTimeField(auto_now=True)

@@ -194,3 +194,18 @@ class DeleteAllUsersView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
+class CheckUserAPIView(APIView):
+    def post(self, request):
+        number = request.data.get('number')
+        
+        if not number:
+            return Response({"message": "Number is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = UserProfile.objects.get(number=number)
+            serializer = UserProfileSerializer(user)
+            return api_response(serializer.data, modelName, 'get')
+        except UserProfile.DoesNotExist:
+            return api_error_response({"Null Error"}, status.HTTP_200_OK,"No user found")
